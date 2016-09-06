@@ -4,11 +4,8 @@ MAINTAINER Maxwell Health
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
 
-# Set timezone
-RUN echo "US/Eastern" > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
-
 RUN apt-get update -y && \
-  apt-get install -y unzip xvfb qt5-default libqt5webkit5-dev gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-x
+  apt-get install -y unzip xvfb locales qt5-default libqt5webkit5-dev gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-x
 
 # Install Chrome WebDriver
 RUN CHROMEDRIVER_VERSION='2.23' && \
@@ -31,6 +28,17 @@ RUN curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-ke
 RUN dpkg-divert --add --rename --divert /opt/google/chrome/google-chrome.real /opt/google/chrome/google-chrome && \
     echo "#!/bin/bash\nexec /opt/google/chrome/google-chrome.real --no-sandbox \"\$@\"" > /opt/google/chrome/google-chrome && \
     chmod 755 /opt/google/chrome/google-chrome
+
+# Generate UTF-8 locale
+RUN dpkg-reconfigure locales && \
+    locale-gen C.UTF-8 && \
+    /usr/sbin/update-locale LANG=C.UTF-8 && \
+    echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && locale-gen
+
+# Set UTF-8
+ENV LC_ALL C.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
 
 # Default configuration
 ENV DISPLAY :20.0
