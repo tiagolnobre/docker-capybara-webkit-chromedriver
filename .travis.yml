@@ -9,9 +9,12 @@ before_install:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
 script:
-  - docker build -t $NAME:$VERSION .
+  # building image and testing it
+  - docker-compose up sut
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    docker tag $NAME:$VERSION $NAME:$VERSION && docker push $NAME:$VERSION;
+    # tagging the built image with correct name 
+    docker tag dockercapybarawebkitchromedriver_chromedriver:latest $NAME:$VERSION;
+    docker push $NAME:$VERSION;
     fi
