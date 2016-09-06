@@ -29,7 +29,7 @@ RUN curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-ke
 # Disable the SUID sandbox so that Chrome can launch without being in a privileged container.
 # One unfortunate side effect is that `google-chrome --help` will no longer work.
 RUN dpkg-divert --add --rename --divert /opt/google/chrome/google-chrome.real /opt/google/chrome/google-chrome && \
-    echo "#!/bin/bash\nexec /opt/google/chrome/google-chrome.real --disable-setuid-sandbox \"\$@\"" > /opt/google/chrome/google-chrome && \
+    echo "#!/bin/bash\nexec /opt/google/chrome/google-chrome.real --no-sandbox \"\$@\"" > /opt/google/chrome/google-chrome && \
     chmod 755 /opt/google/chrome/google-chrome
 
 # Default configuration
@@ -48,4 +48,3 @@ ADD xvfb-daemon-run /usr/bin/xvfb-daemon-run
 RUN chmod a+x /usr/bin/xvfb-daemon-run
 
 ENTRYPOINT ["/usr/bin/xvfb-daemon-run"]
-
