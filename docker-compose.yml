@@ -1,0 +1,13 @@
+browser:
+  build: .
+  dockerfile: Dockerfile
+
+sut:
+  build: ./uat-runner-chrome
+  dockerfile: Dockerfile_for_tests
+  # image: tiagonobre/uat-runner-chrome
+  links:
+    - browser
+  volumes:
+    - /dev/shm:/dev/shm
+    - ./uat-runner-chrome/spec:/specs/spec

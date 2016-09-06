@@ -1,0 +1,3 @@
+[submodule "uat-runner-chrome"]
+	path = uat-runner-chrome
+	url = https://github.com/tiagolnobre/uat-runner-chrome.git
